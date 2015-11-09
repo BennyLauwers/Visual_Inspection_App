@@ -1,5 +1,5 @@
 # Visual_Inspection_App
-Visual Inspection Application for a centrifugal pump build in Unity with Vuforia SDK for the Augmented Reality function
+Visual Inspection Application for a centrifugal pump build in Unity (C#) with Vuforia SDK for the Augmented Reality function
 
 Application build for demo purposes
 Android (minimum API Level: 2.3.1)
