@@ -1,0 +1,93 @@
+// Daily Inspection Overview & safety regulations
+
+// General Unity Classes
+using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
+
+public class DailyInspectionMenu : MonoBehaviour {
+
+	// Declaration of public variables
+	// Assigning public GameObjects in Unity Inspector 
+	public Button startDailyInspection;
+	public Button backToTrackingMenu;
+
+	public Toggle safetyHelmet;
+	public Toggle safetyGlasses;
+
+	public Canvas BackMenu;
+	public Button YesGoBack;
+	public Button NoStayHere;
+
+	public Canvas SafetWarning;
+	public Button OkSafety;
+	
+
+	// Loading and declaration of GameObjects at loading of task panel screen
+	void Start () {
+		startDailyInspection = startDailyInspection.GetComponent<Button> ();
+		backToTrackingMenu = backToTrackingMenu.GetComponent<Button> ();
+
+		safetyHelmet = safetyHelmet.GetComponent<Toggle> ();
+		safetyGlasses = safetyGlasses.GetComponent<Toggle> ();
+
+		BackMenu = BackMenu.GetComponent<Canvas> ();
+		YesGoBack = YesGoBack.GetComponent<Button> ();
+		NoStayHere = NoStayHere.GetComponent<Button> ();
+
+		SafetWarning = SafetWarning.GetComponent<Canvas> ();
+		OkSafety = OkSafety.GetComponent<Button> ();
+
+		BackMenu.enabled = false;
+		SafetWarning.enabled = false;
+	}
+
+	void Update () {
+	
+	}
+
+	// Starting the application and checking of safety regulations are checked with alert if not OK
+	public void StartApplication () {
+		if (safetyHelmet.isOn && safetyGlasses.isOn) {
+			Application.LoadLevel (3);
+		} else {
+			SafetWarning.enabled = true;
+			startDailyInspection.interactable = false;
+			backToTrackingMenu.interactable = false;
+			safetyHelmet.interactable = false;
+			safetyGlasses.interactable = false;
+		}
+	}
+
+	// OK button at safety alert warning
+	public void WarningOK () {
+		SafetWarning.enabled = false;
+		startDailyInspection.interactable = true;
+		backToTrackingMenu.interactable = true;
+		safetyHelmet.interactable = true;
+		safetyGlasses.interactable = true;
+	}
+
+	// Go to Back Menu after "back to tracking menu" is pressed
+	public void BackMenuEnabling () {
+		BackMenu.enabled = true;
+		startDailyInspection.interactable = false;
+		backToTrackingMenu.interactable = false;
+		safetyHelmet.interactable = false;
+		safetyGlasses.interactable = false;
+	}
+
+	// No-button on Back Menu
+	public void NoGoBack () {
+		BackMenu.enabled = false;
+		startDailyInspection.interactable = true;
+		backToTrackingMenu.interactable = true;
+		safetyHelmet.interactable = true;
+		safetyGlasses.interactable = true;
+	}
+
+	// Yes-button on Back Menu
+	public void YesGoBackToTracking () {
+		Application.LoadLevel (1);
+	}
+}
