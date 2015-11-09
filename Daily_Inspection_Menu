@@ -23,7 +23,7 @@ public class DailyInspectionMenu : MonoBehaviour {
 	public Button OkSafety;
 	
 
-	// Loading and declaration of GameObjects at loading of task panel screen
+	// Loading and declaration of GameObjects at loading of daily inspection screen
 	void Start () {
 		startDailyInspection = startDailyInspection.GetComponent<Button> ();
 		backToTrackingMenu = backToTrackingMenu.GetComponent<Button> ();
