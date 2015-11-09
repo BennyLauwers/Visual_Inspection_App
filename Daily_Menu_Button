@@ -1,0 +1,30 @@
+// AR Button Daily Inspection
+
+// General Unity Classes
+using UnityEngine;
+using System.Collections;
+
+public class DailyMenuButton : MonoBehaviour {
+
+	// Declaration of public variables
+	// Assigning public GameObjects in Unity Inspector 
+	public GameObject dailyMenuButton;
+	GameObject thisButton;
+
+	BoxCollider InvisibleButton;
+	Vector3 ButtonPosition;
+
+	// Loading and declaration of GameObjects at loading of daily menu button
+	void Start () {
+		thisButton = this.gameObject;
+
+		InvisibleButton = this.GetComponent<BoxCollider> ();
+		ButtonPosition = InvisibleButton.center;
+	
+	}
+
+	// Loading daily inspection menu
+	void OnMouseDown (){
+		Application.LoadLevel (2);
+	}
+}
