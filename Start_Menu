@@ -1,0 +1,71 @@
+// General Unity Classes
+using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
+
+public class StartMenu : MonoBehaviour {
+
+	// Declaration of public variables
+	// Assigning public GameObjects in Unity Inspector 
+	public Button startApp;
+	public Button language;
+	public Button safetyGuide;
+	public Button readProcedure;
+	public Button learnMore;
+	public Button leaveApp;
+
+	public Canvas quitMenu;
+	public Button noQuitApp;
+	public Button quitApp;
+
+
+	// Loading and declaration of GameObjects at loading of Start Menu
+	void Start () {
+
+		startApp = startApp.GetComponent<Button> ();
+		language = language.GetComponent<Button> ();
+		safetyGuide = safetyGuide.GetComponent<Button> ();
+		readProcedure = readProcedure.GetComponent<Button> ();
+		learnMore = learnMore.GetComponent<Button> ();
+		leaveApp = leaveApp.GetComponent<Button> ();
+
+		quitMenu = quitMenu.GetComponent<Canvas> ();
+		noQuitApp = noQuitApp.GetComponent<Button> ();
+		quitApp = quitApp.GetComponent<Button> ();
+
+		quitMenu.enabled = false;
+	}
+
+	// Going to AR Scanning screen (Start Application)
+	public void StartApplication () {
+		Application.LoadLevel (1);
+	}
+
+	// Stopping the Application and calling Quit Menu
+	public void QuitPress() {
+		quitMenu.enabled = true;
+		startApp.interactable = false;
+		language.interactable = false;
+		safetyGuide.interactable = false;
+		readProcedure.interactable = false;
+		learnMore.interactable = false;
+		leaveApp.interactable = false;
+	}
+
+	// No-button on Quit Menu
+	public void NoQuitApp() {
+		quitMenu.enabled = false;
+		startApp.interactable = true;
+		language.interactable = true;
+		safetyGuide.interactable = true;
+		readProcedure.interactable = true;
+		learnMore.interactable = true;
+		leaveApp.interactable = true;
+	}
+
+	// Yes-button on Quit Menu
+	public void QuitApp () {
+		Application.Quit();
+	}
+
+}
