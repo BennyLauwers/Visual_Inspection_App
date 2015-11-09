@@ -1,0 +1,30 @@
+// AR Button Back to Menu
+
+// General Unity Classes
+using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
+
+public class BackMenuButton : MonoBehaviour {
+
+	// Declaration of public variables
+	// Assigning public GameObjects in Unity Inspector 
+	public GameObject BackButton;
+	GameObject thisButton;
+
+	BoxCollider InvisibleButton;
+	Vector3 ButtonPosition;
+
+	// Loading and declaration of GameObjects at loading of back to menu button
+	void Start () {
+		thisButton = this.gameObject;
+
+		InvisibleButton = this.GetComponent<BoxCollider> ();
+		ButtonPosition = InvisibleButton.center;
+	}
+
+	// Loading Start Menu
+	void OnMouseDown (){
+		Application.LoadLevel (0);
+	}
+}
