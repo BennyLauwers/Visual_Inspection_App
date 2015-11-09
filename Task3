@@ -1,0 +1,40 @@
+// General Unity Classes
+using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
+
+public class Task3 : MonoBehaviour {
+
+	// Declaration of public variables
+	// Assigning public GameObjects in Unity Inspector 
+	public Button BackToTaskPanel;
+	public Button Task3OK;
+	public Button Task3notOK;
+
+	public static int valueTask3 = 0;
+
+	// Loading and declaration of GameObjects at loading of Task 3
+	void Start () {
+
+		BackToTaskPanel = BackToTaskPanel.GetComponent<Button> ();
+		Task3OK = Task3OK.GetComponent<Button> ();
+		Task3notOK = Task3notOK.GetComponent<Button> ();
+	}
+
+	// Going back to Task Panel (Back Button)
+	public void GoToTaskPanel() {
+		Application.LoadLevel (3);
+	}
+
+	// OK-button and assigning value for checkmark
+	public void GoToTask3OK () {
+		valueTask3 = 1;
+		Application.LoadLevel (3);
+	}
+
+	//Not-OK-button and assigning value for checkmark
+	public void GoToTask3notOK (){
+		valueTask3 = 2;
+		Application.LoadLevel (3);
+	}
+}
