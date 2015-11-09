@@ -1,0 +1,505 @@
+// General Unity Classes
+using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
+
+// Today's date & time generation
+using System;
+using System.Globalization;
+
+// XMLWriter
+using System.Xml;
+
+// From XML to XSL and HTML
+using System.Xml.Xsl;
+
+// Sending mail
+using System.Net;
+using System.Net.Mail;
+
+// SSL Security for mail
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
+
+// Save and generate files on Android device
+using System.IO;
+
+public class TaskPanel : MonoBehaviour {
+
+	// Declaration of public variables
+	// Assigning public GameObjects in Unity Inspector 
+	public Button BackToMainMenu;
+	public Button BackToTrackingMenu;
+
+	public Button SendReport;
+	public Button SendReportSubmitWO;
+
+	public Button BtnDTask1;
+	public Button BtnDTask2;
+	public Button BtnDTask3;
+	public Button BtnDTask4;
+
+	public Toggle TglDTask1Ok;
+	public Toggle TglDTask2Ok;
+	public Toggle TglDTask3Ok;
+	public Toggle TglDTask4Ok;
+
+	public Toggle TglDTask1NOk;
+	public Toggle TglDTask2NOk;
+	public Toggle TglDTask3NOk;
+	public Toggle TglDTask4NOk;
+
+	public Canvas QuitMenuReportWO;
+	public Button YesReportWO;
+	public Button NoReportWO;
+
+	public Canvas QuitMenuReport;
+	public Button YesReport;
+	public Button NoReport;
+
+	// Declaration of script variables
+	int checkToggle1 = 0;
+	int checkToggle2 = 0;
+	int checkToggle3 = 0;
+	int checkToggle4 = 0;
+	int TotalToggle = 0;
+
+	string reportTask1 = "";
+	string reportTask2 = "";
+	string reportTask3 = "";
+	string reportTask4 = "";
+
+
+	// Remembering checklist values when switching between different inspection tasks
+	void Awake () {
+		DontDestroyOnLoad (transform.gameObject);
+	}
+
+	// Loading and declaration of GameObjects at loading of task panel screen
+	void Start () {
+		// Loading Buttons
+		BackToMainMenu = BackToMainMenu.GetComponent<Button> ();
+		BackToTrackingMenu = BackToTrackingMenu.GetComponent<Button> ();
+
+		SendReport = SendReport.GetComponent<Button> ();
+		SendReport.interactable = false;
+		SendReportSubmitWO = SendReportSubmitWO.GetComponent<Button> ();
+		SendReportSubmitWO.interactable = false;
+
+		BtnDTask1 = BtnDTask1.GetComponent<Button> ();
+		BtnDTask2 = BtnDTask2.GetComponent<Button> ();
+		BtnDTask3 = BtnDTask3.GetComponent<Button> ();
+		BtnDTask4 = BtnDTask4.GetComponent<Button> ();
+
+		// Loading Canvas and buttons dispalyed after sending report and joborder
+		QuitMenuReportWO = QuitMenuReportWO.GetComponent<Canvas> ();
+		YesReportWO = YesReportWO.GetComponent<Button> ();
+		NoReportWO = NoReportWO.GetComponent<Button> ();
+		QuitMenuReportWO.enabled = false;
+
+		// Loading Canvas and buttons dispalyed after sending report
+		QuitMenuReport = QuitMenuReport.GetComponent<Canvas> ();
+		YesReport = YesReport.GetComponent<Button> ();
+		NoReport = NoReport.GetComponent<Button> ();
+		QuitMenuReport.enabled = false;
+
+		// Loading Checklist components and values (1 = OK; 2 = Not OK)
+		TglDTask1Ok = TglDTask1Ok.GetComponent<Toggle> ();
+		TglDTask1NOk.interactable = false;
+		TglDTask1Ok.interactable = false;
+		if (Task1.valueTask1 == 1) {
+			TglDTask1Ok.isOn = true;
+			reportTask1 = "OK";
+		}
+		if (Task1.valueTask1 == 2) {
+			TglDTask1NOk.isOn = true;
+			reportTask1 = "Not OK";
+		}
+
+		TglDTask2Ok = TglDTask2Ok.GetComponent<Toggle> ();
+		TglDTask2NOk.interactable = false;
+		TglDTask2Ok.interactable = false;
+		if (Task2.valueTask2 == 1) {
+			TglDTask2Ok.isOn = true;
+			reportTask2 = "OK";
+		}
+		if (Task2.valueTask2 == 2) {
+			TglDTask2NOk.isOn = true;
+			reportTask2 = "Not OK";
+		}
+
+		TglDTask3Ok = TglDTask3Ok.GetComponent<Toggle> ();
+		TglDTask3NOk.interactable = false;
+		TglDTask3Ok.interactable = false;
+		if (Task3.valueTask3 == 1) {
+			TglDTask3Ok.isOn = true;
+			reportTask3 = "OK";
+		}
+		if (Task3.valueTask3 == 2) {
+			TglDTask3NOk.isOn = true;
+			reportTask3 = "Not OK";
+		}
+
+		TglDTask4Ok = TglDTask4Ok.GetComponent<Toggle> ();
+		TglDTask4NOk.interactable = false;
+		TglDTask4Ok.interactable = false;
+		if (Task4.valueTask4 == 1) {
+			TglDTask4Ok.isOn = true;
+			reportTask4 = "OK";
+		}
+		if (Task4.valueTask4 == 2) {
+			TglDTask4NOk.isOn = true;
+			reportTask4 = "Not OK";
+		}
+
+		// Verification if all tasks are performed and checked + showing correct button (report or report & joborder) 
+		if (TglDTask1Ok.isOn || TglDTask1NOk.isOn) {
+			checkToggle1 = 1;
+		}
+		
+		if (TglDTask2Ok.isOn || TglDTask2NOk.isOn) {
+			checkToggle2 = 1;
+		}
+		
+		if (TglDTask3Ok.isOn || TglDTask3NOk.isOn) {
+			checkToggle3 = 1;
+		}
+		
+		if (TglDTask4Ok.isOn || TglDTask4NOk.isOn) {
+			checkToggle4 = 1;
+		}
+		
+		TotalToggle = checkToggle1 + checkToggle2 + checkToggle3 + checkToggle4;
+		
+		if (TotalToggle == 4) {
+			if (TglDTask1NOk.isOn || TglDTask2NOk.isOn || TglDTask3NOk.isOn || TglDTask4NOk.isOn){
+				SendReportSubmitWO.interactable = true;
+			} else {
+			SendReport.interactable = true;
+			}
+		}
+	}
+
+	// Going back to main menu and reset all values
+	public void GoToMainMenu () {
+		Task1.valueTask1 = 0;
+		Task2.valueTask2 = 0;
+		Task3.valueTask3 = 0;
+		Task4.valueTask4 = 0;
+		reportTask1 = "";
+		reportTask2 = "";
+		reportTask3 = "";
+		reportTask4 = "";
+		Application.LoadLevel (0);
+	}
+
+	// Going back to tracking menu and reset all values
+	public void GoToTrackingMenu () {
+		Task1.valueTask1 = 0;
+		Task2.valueTask2 = 0;
+		Task3.valueTask3 = 0;
+		Task4.valueTask4 = 0;
+		reportTask1 = "";
+		reportTask2 = "";
+		reportTask3 = "";
+		reportTask4 = "";
+		Application.LoadLevel (1);
+	}
+
+	// Going to Task 1 to Task 4
+	public void GoToTask1 () {
+		Application.LoadLevel (4);
+	}
+
+	public void GoToTask2 () {
+		Application.LoadLevel (5);
+	}
+
+	public void GoToTask3 () {
+		Application.LoadLevel (6);
+	}
+
+	public void GoToTask4 () {
+		Application.LoadLevel (7);
+	}
+
+	// Go to Quit Menu after sending report and workorder
+	public void GoToQuitMenuReportWO () {
+		QuitMenuReportWO.enabled = true;
+		BackToMainMenu.interactable = false;
+		BackToTrackingMenu.interactable = false;
+		SendReport.interactable = false;
+		SendReportSubmitWO.interactable = false;
+		BtnDTask1.interactable = false;
+		BtnDTask2.interactable = false;
+		BtnDTask3.interactable = false;
+		BtnDTask4.interactable = false;
+	}
+
+	// Go to Quit Menu after sending report and workorder
+	public void GoToQuitMenuReport () {
+		QuitMenuReport.enabled = true;
+		BackToMainMenu.interactable = false;
+		BackToTrackingMenu.interactable = false;
+		SendReport.interactable = false;
+		SendReportSubmitWO.interactable = false;
+		BtnDTask1.interactable = false;
+		BtnDTask2.interactable = false;
+		BtnDTask3.interactable = false;
+		BtnDTask4.interactable = false;
+	}
+
+	// No-button on Quit Menu after sending report
+	public void NoButtonReport () {
+		QuitMenuReport.enabled = false;
+		BackToMainMenu.interactable = true;
+		BackToTrackingMenu.interactable = true;
+		SendReport.interactable = false;
+		BtnDTask1.interactable = true;
+		BtnDTask2.interactable = true;
+		BtnDTask3.interactable = true;
+		BtnDTask4.interactable = true;
+	}
+
+	// No-button on Quit Menu after sending report and job order
+	public void NoButtonReportWO () {
+		QuitMenuReportWO.enabled = false;
+		BackToMainMenu.interactable = true;
+		BackToTrackingMenu.interactable = true;
+		SendReportSubmitWO.interactable = false;
+		BtnDTask1.interactable = true;
+		BtnDTask2.interactable = true;
+		BtnDTask3.interactable = true;
+		BtnDTask4.interactable = true;
+	}
+
+	// Yes-button on Quit Menu after sending report and job order (if applicable)
+	public void YesButton () {
+		Task1.valueTask1 = 0;
+		Task2.valueTask2 = 0;
+		Task3.valueTask3 = 0;
+		Task4.valueTask4 = 0;
+		Application.LoadLevel (1);
+	}
+
+	// Generating Daily Report in XML
+	public void xmlDailyreportGeneration () {
+		XmlWriterSettings settings = new XmlWriterSettings();
+		settings.Indent = true;
+		settings.IndentChars = "\t";
+		settings.NewLineOnAttributes = true;
+
+		using (XmlWriter report = XmlWriter.Create (Application.persistentDataPath + "/Daily_Inspection_Report.xml", settings)) { //Run on Android Device
+		//using (XmlWriter report = XmlWriter.Create ("Assets/Resources/Daily_Inspection_Report.xml", settings)) { //Run on PC or Mac
+
+			report.WriteStartDocument();
+
+			report.WriteProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"InspectionReport.xsl\"");
+
+			report.WriteStartElement("Document");
+
+				report.WriteStartElement("General_info");
+
+					report.WriteElementString("Date", DateTime.Now.ToString("dd/MM/yyyy"));
+					report.WriteElementString("Time", DateTime.Now.ToString("HH:mm:ss tt"));
+					report.WriteElementString("Inspection_Type", "Daily visual inspection");
+					report.WriteElementString("Inspection_Site", "Viu More Duffel");
+					report.WriteElementString("Equipment", "Centrifugal pump");
+					report.WriteElementString("Equipment_number", "712.FH.24");
+
+				report.WriteEndElement();
+
+				report.WriteStartElement("Daily_Inspection_Report");
+				
+					report.WriteStartElement("Task");
+
+						report.WriteElementString("ID", "001");
+						report.WriteElementString("Task", "Check for damaged electrical wiring");
+						report.WriteElementString("Result", reportTask1);
+
+					report.WriteEndElement();
+
+					report.WriteStartElement("Task");
+
+						report.WriteElementString("ID", "002");
+						report.WriteElementString("Task", "Check for weird noises");
+						report.WriteElementString("Result", reportTask2);
+
+					report.WriteEndElement();
+
+					report.WriteStartElement("Task");
+
+						report.WriteElementString("ID", "003");
+						report.WriteElementString("Task", "Check for abnormal vibration");
+						report.WriteElementString("Result", reportTask3);
+
+					report.WriteEndElement();
+
+					report.WriteStartElement("Task");
+
+						report.WriteElementString("ID", "004");
+						report.WriteElementString("Task", "Check for fluid leaks");
+						report.WriteElementString("Result", reportTask4);
+
+					report.WriteEndElement();
+				
+				report.WriteEndElement();
+
+			report.WriteEndElement();
+
+			report.WriteEndDocument();
+		}
+
+	}
+
+	// Creating report from XML with XSL stylesheet
+	public void htmlReportCreation () {
+		XslCompiledTransform xslt = new XslCompiledTransform();
+		xslt.Load(Application.persistentDataPath + "/InspectionReport.xsl");
+		xslt.Transform(Application.persistentDataPath + "/Daily_Inspection_Report.xml", Application.persistentDataPath + "/Inspection_Report.html");
+	}
+
+	// Sending daily report mail
+	public void sendDailyReportMail () {
+			MailMessage mail = new MailMessage ();
+			SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+			mail.From = new MailAddress("benny.lauwers@viumore.be");
+			mail.To.Add("benny.lauwers45@gmail.com");
+			mail.Subject = "Daily Inspection Report";
+			mail.Body = "In attachment today's daily inspection report of the centrifugal pump 712.FH.24";
+			
+			System.Net.Mail.Attachment attachmenthtml;
+			System.Net.Mail.Attachment attachmentxml;
+			attachmenthtml = new System.Net.Mail.Attachment(Application.persistentDataPath + "/Inspection_Report.html");
+			attachmentxml = new System.Net.Mail.Attachment(Application.persistentDataPath + "/Daily_Inspection_Report.xml");
+			mail.Attachments.Add(attachmenthtml);
+			mail.Attachments.Add(attachmentxml);
+			
+			SmtpServer.Port = 587;
+			SmtpServer.Credentials = new System.Net.NetworkCredential("benny.lauwers45@gmail.com", "apen2009") as ICredentialsByHost;
+			SmtpServer.EnableSsl = true;
+			ServicePointManager.ServerCertificateValidationCallback = 
+			delegate(object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) 
+			{ return true; };
+			
+			SmtpServer.Send(mail);
+	}
+
+	// Generating Daily Report and joborder in XML
+	public void xmlJoborderGeneration () {
+		XmlWriterSettings settings = new XmlWriterSettings();
+		settings.Indent = true;
+		settings.IndentChars = "\t";
+		settings.NewLineOnAttributes = true;
+		
+		using (XmlWriter report = XmlWriter.Create (Application.persistentDataPath + "/Job_Order.xml", settings)) { //Run on Android Device
+		//using (XmlWriter report = XmlWriter.Create ("Assets/Resources/Daily_Inspection_Report.xml", settings)) { //Run on PC or Mac
+			
+			report.WriteStartDocument();
+			
+			report.WriteProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"JobOrder.xsl\"");
+
+			report.WriteStartElement("Document");
+				
+				report.WriteStartElement("General_info");
+				
+					report.WriteElementString("Date", DateTime.Now.ToString("dd/MM/yyyy"));
+					report.WriteElementString("Time", DateTime.Now.ToString("HH:mm:ss tt"));
+					report.WriteElementString("Source", "Daily visual inspection");
+					report.WriteElementString("Site", "Viu More Duffel");
+					report.WriteElementString("Equipment", "Centrifugal pump");
+					report.WriteElementString("Equipment_number", "712.FH.24");
+				
+				report.WriteEndElement();
+				
+				report.WriteStartElement("Job_Order");
+				int IDcount = 1;
+					if (Task1.valueTask1 == 2) {
+						report.WriteStartElement("Job");
+						
+							report.WriteElementString("ID", "00" + IDcount);
+							report.WriteElementString("Task", "Fix damaged electrical wiring");
+							IDcount++;
+						
+						report.WriteEndElement();
+					}
+					
+					if (Task2.valueTask2 == 2) {		
+						report.WriteStartElement("Job");
+					
+							report.WriteElementString("ID", "00" + IDcount);
+							report.WriteElementString("Task", "Detect source and fix weird noises");
+							IDcount++;
+						
+					report.WriteEndElement();
+					}
+
+					if (Task3.valueTask3 == 2) {		
+						report.WriteStartElement("Job");
+						
+						report.WriteElementString("ID", "00" + IDcount);
+						report.WriteElementString("Task", "Perform vibration analysis and fix abnormal vibration");
+						IDcount++;
+						
+						report.WriteEndElement();
+					}
+
+					if (Task4.valueTask4 == 2) {		
+						report.WriteStartElement("Job");
+						
+						report.WriteElementString("ID", "00" + IDcount);
+						report.WriteElementString("Task", "Fix fluid leaks");
+						IDcount++;
+						
+						report.WriteEndElement();
+					}
+
+				report.WriteEndElement();
+				
+			report.WriteEndElement();
+				
+			report.WriteEndDocument();
+			IDcount = 0;
+		}
+		
+	}
+
+	// Creating job order report from XML with XSL stylesheet
+	public void htmlJoborderCreation () {
+		XslCompiledTransform xslt = new XslCompiledTransform();
+		xslt.Load(Application.persistentDataPath + "/JobOrder.xsl");
+		xslt.Transform(Application.persistentDataPath + "/Job_Order.xml", Application.persistentDataPath + "/Job_Order.html");
+	}
+
+	// Sending daily report and joborder mail
+	public void sendJoborderAndDailyReportMail () {
+		MailMessage mail = new MailMessage ();
+		SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+		mail.From = new MailAddress("benny.lauwers@viumore.be");
+		mail.To.Add("benny.lauwers45@gmail.com");
+		mail.Subject = "Daily Inspection Report + Job Order";
+		mail.Body = "In attachment today's daily inspection report and job order of the centrifugal pump 712.FH.24";
+		
+		System.Net.Mail.Attachment attachmentRPhtml;
+		System.Net.Mail.Attachment attachmentJOhtml;
+		System.Net.Mail.Attachment attachmentRPxml;
+		System.Net.Mail.Attachment attachmentJOxml;
+		attachmentRPhtml = new System.Net.Mail.Attachment(Application.persistentDataPath + "/Inspection_Report.html");
+		attachmentJOhtml = new System.Net.Mail.Attachment(Application.persistentDataPath + "/Job_Order.html");
+		attachmentRPxml = new System.Net.Mail.Attachment(Application.persistentDataPath + "/Daily_Inspection_Report.xml");
+		attachmentJOxml = new System.Net.Mail.Attachment(Application.persistentDataPath + "/Job_Order.xml");
+		mail.Attachments.Add(attachmentRPhtml);
+		mail.Attachments.Add(attachmentJOhtml);
+		mail.Attachments.Add(attachmentRPxml);
+		mail.Attachments.Add(attachmentJOxml);
+		
+		SmtpServer.Port = 587;
+		SmtpServer.Credentials = new System.Net.NetworkCredential("benny.lauwers45@gmail.com", "apen2009") as ICredentialsByHost;
+		SmtpServer.EnableSsl = true;
+		ServicePointManager.ServerCertificateValidationCallback = 
+			delegate(object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) 
+		{ return true; };
+		
+		SmtpServer.Send(mail);
+	}	
+}
