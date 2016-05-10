@@ -494,7 +494,7 @@ public class TaskPanel : MonoBehaviour {
 		mail.Attachments.Add(attachmentJOxml);
 		
 		SmtpServer.Port = 587;
-		SmtpServer.Credentials = new System.Net.NetworkCredential("benny.lauwers45@gmail.com", "apen2009") as ICredentialsByHost;
+		SmtpServer.Credentials = new System.Net.NetworkCredential("benny.lauwers45@gmail.com", pasword) as ICredentialsByHost;
 		SmtpServer.EnableSsl = true;
 		ServicePointManager.ServerCertificateValidationCallback = 
 			delegate(object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) 
